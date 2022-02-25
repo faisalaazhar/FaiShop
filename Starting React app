@@ -1,0 +1,26 @@
+Start a React project
+
+npx create-react-app frontend1 (create a app name frontend1)
+cd frontend1
+ls -a (list all files)
+rm -rf .git (remove .git folder)
+remove .gitignore file to root folder
+#change dependencies 
+	add:
+	node_modules
+	node_modules/
+	
+#misc 
+	add:
+	.env
+
+cd..
+git init
+git add .
+git commit -m 'commnet'
+
+git remote add origin  <REMOTE_URL>
+git push origin main
+
+cd frontend1
+npm i react-bootstrap
