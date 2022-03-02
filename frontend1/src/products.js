@@ -92,19 +92,6 @@ const products = [
   },
   {
     _id: '8',
-    name: 'FujiFilm OS 800 DSLR Camera',
-    image: '/images/fujifilm800.jpeg',
-    description:
-      'Characterized by versatile imaging specs, the Canon EOS 80D further clarifies itself using a pair of robust focusing systems and an intuitive design',
-    brand: 'FujiFilm',
-    category: 'Electronics',
-    price: 1029.99,
-    countInStock: 4,
-    rating: 5,
-    numReviews: 3,
-  },
-  {
-    _id: '9',
     name: 'Mibro S1 Lite Smart Watch',
     image: '/images/mibros1lite.jpg',
     description:
