@@ -24,3 +24,10 @@ git push origin main
 
 cd frontend1
 npm i react-bootstrap
+
+Notes:
+Right way to implement <Route>
+<Routes>
+	<Route path="/" exact element={<HomeScreen />} />
+	<Route path="/product/:id" element={<ProductScreen />} />
+</Routes>
