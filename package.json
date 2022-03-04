@@ -9,6 +9,7 @@
   "description": "It is a MERN e-commerce platform from scratch. \r It's a practice project for developing skills.",
   "version": "1.0.0",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "start": "node backend/server",
     "server": "nodemon backend/server",
