@@ -17,7 +17,7 @@ const RegisterScreen = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
-    const [message, setMessage] = useState('')
+    const [message, setMessage] = useState(null)
 
     const dispatch = useDispatch()
 
@@ -46,7 +46,7 @@ const RegisterScreen = () => {
     <FormContainer>
 
         <h1 className='text-center'>Sign Up</h1>
-
+        {message && <Message variant='danger'>{message}</Message>}
         {error && <Message variant='danger'>{error}</Message>}
         {loading && <Loader></Loader>}
 
