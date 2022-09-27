@@ -23,7 +23,7 @@ const PlaceOrderScreen = () => {
     cart.shippingPrice = addDecimals(
         cart.itemsPrice > 100 ? 0 : 10
     )
-    cart.vatPrice = 0.00
+    cart.vatPrice = Number(0).toFixed(2)
     cart.totalPrice = (
         Number(cart.itemsPrice) +
         Number(cart.shippingPrice) +
