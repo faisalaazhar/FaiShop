@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button, Row, Col, ListGroup, Image, Card } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import CheckoutSteps from '../components/CheckoutSteps'
+import { createOrder } from '../actions/orderActions'
 
 const PlaceOrderScreen = () => {
 
@@ -30,8 +31,27 @@ const PlaceOrderScreen = () => {
         Number(cart.vatPrice)
     ).toFixed(2)
 
+    const orderCreate = useSelector(state => state.orderCreate)
+    const { order, success, error } = orderCreate
+
+    useEffect(() => {
+        if(success){
+            navigate(`/order/${order._id}`)
+        }
+
+        // eslint-disable-next-line
+    }, [navigate, success])
+
     const placeOrderHandler = () => {
-        console.log('place order')
+        dispatch(createOrder({
+            orderItems: cart.cartItems,
+            shippingAddress: cart.shippingAddress,
+            paymentMethod: cart.paymentMethod,
+            itemsPrice: cart.itemsPrice,
+            shippingPrice: cart.shippingPrice,
+            vatPrice: cart.vatPrice,
+            totalPrice: cart.totalPrice
+        }))
     }
 
   return (
@@ -54,11 +74,11 @@ const PlaceOrderScreen = () => {
                     <ListGroup.Item>
                         <h2>Payment Method</h2>
                         <strong>Method: </strong>
-                        {cart.paymentMethod.paymentMethod}
+                        {cart.paymentMethod}
                     </ListGroup.Item>
 
                     <ListGroup.Item>
-                        <h2>Order Items</h2>]
+                        <h2>Order Items</h2>
                         {cart.cartItems.length === 0 
                             ? <Message>Your cart is empty</Message>
                             : (
@@ -118,6 +138,11 @@ const PlaceOrderScreen = () => {
                                 <Col>${cart.totalPrice}</Col>
                             </Row>
                         </ListGroup.Item>
+
+                        <ListGroup.Item>
+                            {error && <Message variant='danger'>{error}</Message>}
+                        </ListGroup.Item>
+
                         <ListGroup.Item>
                             <Button 
                                 type='button' 
