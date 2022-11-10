@@ -73,8 +73,7 @@ const ProductEditScreen = () => {
                     'Content-Type': 'multipart/form-data'
                 }
             }
-            const {data} = await axios.post('api/upload', formData, config)
-            console.log(data)
+            const {data} = await axios.post('/api/upload', formData, config)
             setImage(data)
             setUploading(false)
         }catch (error){
@@ -138,7 +137,7 @@ const ProductEditScreen = () => {
                         value={image}
                         onChange={(e) => setImage(e.target.value)}
                     ></Form.Control>
-                    <Form.Control name='image' type='file' onChange={uploadFileHandler}/>
+                    <Form.Control name='image' type='file' onChange={uploadFileHandler}></Form.Control>
                     {uploading && <Loader/>}
                     
                 </Form.Group>
