@@ -86,7 +86,6 @@ const updateProduct = asyncHandler(async(req, res) => {
         product.countInStock = countInStock
         product.description = description
 
-
         const updatedProduct = await product.save()
         res.json(updatedProduct)
     }else{

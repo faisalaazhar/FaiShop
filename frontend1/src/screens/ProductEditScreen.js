@@ -1,11 +1,14 @@
+import axios from 'axios'
 import React, {useState, useEffect} from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import {Form, Button, Row, Col} from 'react-bootstrap'
+import { Button, Row, Col} from 'react-bootstrap'
+import Form from 'react-bootstrap/Form'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import FormContainer from '../components/FormContainer'
-import { listProductDetails,  } from '../actions/productActions'
+import { listProductDetails, updateProduct } from '../actions/productActions'
+import { PRODUCT_UPDATE_RESET } from '../constants/productConstants'
 
 
 const ProductEditScreen = () => {
@@ -20,50 +23,80 @@ const ProductEditScreen = () => {
     const [category, setCategory] = useState('')
     const [countInStock, setCountInStock] = useState(0)
     const [description, setDescription] = useState('')
+    const [uploading, setUploading] = useState(false)
 
     const dispatch = useDispatch()
 
     const productDetails = useSelector(state => state.productDetails)
     const {loading, error, product } = productDetails
 
-    // const productUpdate = useSelector(state => state.productUpdate)
-    // const {
-    //     loading: loadingUpdate, 
-    //     error: errorUpdate, 
-    //     success: successUpdate 
-    // } = productUpdate
+    const productUpdate = useSelector(state => state.productUpdate)
+    const {
+        loading: loadingUpdate, 
+        error: errorUpdate, 
+        success: successUpdate
+    } = productUpdate
 
     useEffect(() => {
-        // if(successUpdate){
-        //     dispatch({type: USER_UPDATE_RESET})
-        //     navigate('/admin/userlist')
-        // }else{
-        //     if(!user.name || user._id !== id){
-        //         dispatch(getUserDetails(id))
-        //     }else{
-        //         setName(user.name)
-        //         setEmail(user.email)
-        //         setIsAdmin(user.isAdmin)
-        //     }
-        // }
-
-        if(!product.name || product._id !== id){
-            dispatch(listProductDetails(id))
+        if(successUpdate){
+            dispatch({type: PRODUCT_UPDATE_RESET})
+            navigate('/admin/productlist')
         }else{
-            setName(product.name)
-            setPrice(product.price)
-            setImage(product.image)
-            setBrand(product.brand)
-            setCategory(product.category)
-            setCountInStock(product.countInStock)
-            setDescription(product.description)
+            if(!product.name || product._id !== id){
+                dispatch(listProductDetails(id))
+            }else{
+                setName(product.name)
+                setPrice(product.price)
+                setImage(product.image)
+                setBrand(product.brand)
+                setCategory(product.category)
+                setCountInStock(product.countInStock)
+                setDescription(product.description)
+            }
         }
+
         
     }, [successUpdate, product, id, dispatch, navigate])
 
+
+    const uploadFileHandler = async (e) => {
+        const file = e.target.files[0]
+        console.log(file)
+        const formData = new FormData()
+        formData.append('image', file)
+        console.log(formData)
+        setUploading(true)
+
+        try{
+            const config = {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }
+            const {data} = await axios.post('api/upload', formData, config)
+            console.log(data)
+            setImage(data)
+            setUploading(false)
+        }catch (error){
+            console.error(error)
+            setUploading(false)
+        }
+    }
+
     const submitHandler = (e) => {
         e.preventDefault()
-        //dispatch(updateUser({_id: id, name, email, isAdmin}))
+        dispatch(
+            updateProduct({
+                _id: id, 
+                name, 
+                price,
+                image,
+                brand,
+                category,
+                countInStock,
+                description
+            })
+        )
     }
 
   return (
@@ -72,10 +105,9 @@ const ProductEditScreen = () => {
         <Link to='/admin/productlist' className='btn btn-light my-3'>Go Back</Link>
 
         <FormContainer>
-
             <h1 className='text-center'>Edit Product</h1>
-            {/* {loadingUpdate && <Loader/>}
-            {errorUpdate && <Message variant='danger'>{errorUpdate}</Message>} */}
+            {loadingUpdate && <Loader/>}
+            {errorUpdate && <Message variant='danger'>{errorUpdate}</Message>}
             {loading ? <Loader/> : error ? <Message variant='danger'>{error}</Message> : (
             <Form onSubmit={submitHandler}>
                 <Form.Group controlId='name'>
@@ -106,6 +138,9 @@ const ProductEditScreen = () => {
                         value={image}
                         onChange={(e) => setImage(e.target.value)}
                     ></Form.Control>
+                    <Form.Control name='image' type='file' onChange={uploadFileHandler}/>
+                    {uploading && <Loader/>}
+                    
                 </Form.Group>
 
                 <Form.Group controlId='brand'>
