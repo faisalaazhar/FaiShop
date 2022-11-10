@@ -1,5 +1,6 @@
 import path from 'path'
 import express from 'express'
+import morgan from 'morgan'
 import dotenv from 'dotenv'
 import Colors from 'colors'
 import { notFound, errorHandler } from './middleware/errorMiddleware.js'
@@ -15,6 +16,11 @@ connectDB()
 
 
 export const app = express()
+
+if(process.env.NODE_ENV === 'development'){
+    app.use(morgan('dev'))
+}
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 
