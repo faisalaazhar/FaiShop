@@ -14,6 +14,7 @@ import Rating from '../components/Rating';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import { listProductDetails, updateReview } from '../actions/productActions';
+import { PRODUCT_REVIEW_RESET } from '../constants/productConstants';
 
 const ProductScreen = () => {
   let { id } = useParams();
@@ -38,8 +39,16 @@ const ProductScreen = () => {
   const { userInfo } = userLogin;
 
   useEffect(() => {
-    dispatch(listProductDetails(id));
-  }, [dispatch, id]);
+    if (successReview) {
+      alert('Review Submitted!');
+      setRating(0);
+      setComment('');
+    }
+    if (!product._id || product._id !== id) {
+      dispatch(listProductDetails(id));
+      dispatch({ type: PRODUCT_REVIEW_RESET });
+    }
+  }, [dispatch, id, successReview]);
 
   const addToCartHandler = () => {
     navigate(`/cart/${id}?qty=${qty}`);
