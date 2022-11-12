@@ -18,15 +18,20 @@ import {
   PRODUCT_REVIEW_FAIL,
   PRODUCT_REVIEW_SUCCESS,
   PRODUCT_REVIEW_REQUEST,
+  TOP_PRODUCT_REQUEST,
+  TOP_PRODUCT_SUCCESS,
+  TOP_PRODUCT_FAIL,
 } from '../constants/productConstants';
 
 export const listProducts =
-  (keyword = '') =>
+  (keyword = '', pageNumber = '') =>
   async (dispatch) => {
     try {
       dispatch({ type: PRODUCT_LIST_REQUEST });
 
-      const { data } = await axios.get(`/api/products?keyword=${keyword}`);
+      const { data } = await axios.get(
+        `/api/products?keyword=${keyword}&pageNumber=${pageNumber}`
+      );
 
       dispatch({
         type: PRODUCT_LIST_SUCCESS,
@@ -200,3 +205,26 @@ export const updateReview =
       });
     }
   };
+
+export const getTopProducts = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: TOP_PRODUCT_REQUEST,
+    });
+
+    const { data } = await axios.get(`/api/products/top`);
+
+    dispatch({
+      type: TOP_PRODUCT_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: TOP_PRODUCT_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
