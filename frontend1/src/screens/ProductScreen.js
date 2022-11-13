@@ -15,6 +15,7 @@ import Message from '../components/Message';
 import Loader from '../components/Loader';
 import { listProductDetails, updateReview } from '../actions/productActions';
 import { PRODUCT_REVIEW_RESET } from '../constants/productConstants';
+import Meta from '../components/Meta';
 
 const ProductScreen = () => {
   let { id } = useParams();
@@ -48,7 +49,7 @@ const ProductScreen = () => {
       dispatch(listProductDetails(id));
       dispatch({ type: PRODUCT_REVIEW_RESET });
     }
-  }, [dispatch, id, successReview]);
+  }, [dispatch, id, successReview, product._id]);
 
   const addToCartHandler = () => {
     navigate(`/cart/${id}?qty=${qty}`);
@@ -75,6 +76,7 @@ const ProductScreen = () => {
         <Message variant='danger'>{error}</Message>
       ) : (
         <>
+          <Meta title={product.name} />
           <Row>
             <Col md={6}>
               <Image src={product.image} alt={product.name} fluid />
